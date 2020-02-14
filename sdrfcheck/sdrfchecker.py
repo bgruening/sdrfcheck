@@ -1,8 +1,8 @@
 import logging
 
 import click
-
 from sdrfcheck.sdrf.exceptions import AppConfigException
+from sdrfcheck.sdrf.sdrf import SdrfDataFrame
 
 CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 
@@ -20,6 +20,9 @@ def validate_sdrf(ctx, sdrf_file):
         msg = "The config file for the pipeline is missing, please provide one "
         logging.error(msg)
         raise AppConfigException(msg)
+
+    df = SdrfDataFrame.parse(sdrf_file)
+    print(df.get_sdrf_cloumns())
 
 
 cli.add_command(validate_sdrf)

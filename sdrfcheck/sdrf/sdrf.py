@@ -3,9 +3,6 @@ import pandas as pd
 
 class SdrfDataFrame(pd.DataFrame):
 
-    def __init__(self, *args, **kwargs):
-        super(self, *args, **kwargs)
-
     @property
     def _constructor(self):
         """
@@ -20,6 +17,13 @@ class SdrfDataFrame(pd.DataFrame):
         :return:
         """
         return self.columns
+
+    @staticmethod
+    def parse(sdrf_file : str):
+        df = pd.read_csv(sdrf_file, sep='\t')
+        return SdrfDataFrame(df)
+
+
 
 
 
