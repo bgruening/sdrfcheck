@@ -22,7 +22,7 @@ def validate_sdrf(ctx, sdrf_file):
         raise AppConfigException(msg)
 
     df = SdrfDataFrame.parse(sdrf_file)
-    print(df.get_sdrf_cloumns())
+    df.validate()
 
 
 cli.add_command(validate_sdrf)
