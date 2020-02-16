@@ -1,7 +1,7 @@
 import pandas as pd
 
 from sdrfcheck.sdrf.exceptions import LogicError
-from sdrfcheck.sdrf.schemas import minimum_schema
+from sdrfcheck.sdrf.sdrf_schema import minimum_schema
 from ebi.ols.api.client import OlsClient
 
 class SdrfDataFrame(pd.DataFrame):
@@ -41,6 +41,6 @@ class SdrfDataFrame(pd.DataFrame):
         Validate a corresponding SDRF
         :return:
         """
-        errors = minimum_schema.validate(self)
+        errors = minimum_schema.validateSDRF(self)
         for error in errors:
             print(error)
