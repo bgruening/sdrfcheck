@@ -42,7 +42,5 @@ class SdrfDataFrame(pd.DataFrame):
         :return:
         """
         errors = minimum_schema.validate(self)
-        minimum_schema.get_column_names()
-        errors = LogicError.process_errors(errors)
         for error in errors:
             print(error)
