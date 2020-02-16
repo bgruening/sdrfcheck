@@ -1,7 +1,5 @@
 import logging
 from enum import IntEnum
-from http import HTTPStatus
-from logging import Logger
 
 
 class AppException(Exception):
@@ -11,14 +9,16 @@ class AppException(Exception):
     def __str__(self):
         return repr(self.value)
 
+
 __all__ = ['LogicError']
+
 
 class LogicError(IntEnum):
     """
     This class process all the errors presented in the SDRF
     """
 
-    def __new__(cls, code, phrase, description='', type = logging.WARN):
+    def __new__(cls, code, phrase, description='', type=logging.WARN):
         obj = int.__new__(cls, code)
         obj._value_ = code
         obj._phrase_ = phrase
@@ -42,10 +42,9 @@ class LogicError(IntEnum):
     def process_errors(errors):
         error_list = []
         for error in errors:
-            if ("Invalid number of columns" in error.message):
+            if "Invalid number of columns" in error.message:
                 error_list.append(LogicError.NUMBER_COLUMNS)
         return error_list
-
 
     def __str__(self) -> str:
         return "{ " + self._phrase_ + " }" + " -- " + "{ " + self.get_type(self._type_) + " }"

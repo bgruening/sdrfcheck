@@ -1,8 +1,8 @@
 import pandas as pd
 
 from sdrfcheck.sdrf.exceptions import LogicError
-from sdrfcheck.sdrf.schemas import human_schema
-
+from sdrfcheck.sdrf.schemas import minimum_schema
+from ebi.ols.api.client import OlsClient
 
 class SdrfDataFrame(pd.DataFrame):
 
@@ -14,7 +14,7 @@ class SdrfDataFrame(pd.DataFrame):
         """
         return SdrfDataFrame
 
-    def get_sdrf_cloumns(self):
+    def get_sdrf_columns(self):
         """
         This method return the name of the columns of the SDRF.
         :return:
@@ -22,8 +22,18 @@ class SdrfDataFrame(pd.DataFrame):
         return self.columns
 
     @staticmethod
-    def parse(sdrf_file : str):
+    def parse(sdrf_file: str):
+        """
+        Read an SDRF into a dataframe
+        :param sdrf_file:
+        :return:
+        """
+
         df = pd.read_csv(sdrf_file, sep='\t')
+        # Convert all columns and values in the dataframe to lowercase
+        df = df.astype(str).apply(lambda x: x.str.lower())
+        df.columns = map(str.lower, df.columns)
+
         return SdrfDataFrame(df)
 
     def validate(self):
@@ -31,16 +41,8 @@ class SdrfDataFrame(pd.DataFrame):
         Validate a corresponding SDRF
         :return:
         """
-        errors = human_schema.validate(self)
+        errors = minimum_schema.validate(self)
+        minimum_schema.get_column_names()
         errors = LogicError.process_errors(errors)
         for error in errors:
             print(error)
-
-
-
-
-
-
-
-
-

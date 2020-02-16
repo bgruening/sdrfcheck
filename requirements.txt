@@ -1,1 +1,4 @@
+requests
 pandas_schema
+pandas
+ebi-ols-client
