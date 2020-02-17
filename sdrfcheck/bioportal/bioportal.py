@@ -103,11 +103,9 @@ class Bioportal(object):
     def _process_payload(self, payload):
         '''Turn boolean True to str 'true' and False to str 'false'. Otherwise,
         server will ignore argument with boolean value.'''
-
         def process_value(value):
             if type(value) is bool:
                 return str(value).lower()
             else:
                 return value
-
-        return {key: process_value(value) for key, value in payload.iteritems()}
+        return {key:process_value(value) for key, value in payload.iteritems()}

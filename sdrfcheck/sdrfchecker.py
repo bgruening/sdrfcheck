@@ -24,6 +24,7 @@ def validate_sdrf(ctx, sdrf_file):
     df = SdrfDataFrame.parse(sdrf_file)
     df.validate()
 
+
 cli.add_command(validate_sdrf)
 
 if __name__ == "__main__":

@@ -1,5 +1,4 @@
 import logging
-
 from pandas_schema import ValidationWarning
 
 

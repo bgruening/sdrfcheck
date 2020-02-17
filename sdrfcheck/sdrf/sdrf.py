@@ -4,6 +4,7 @@ from sdrfcheck.sdrf.exceptions import LogicError
 from sdrfcheck.sdrf.sdrf_schema import minimum_schema
 from ebi.ols.api.client import OlsClient
 
+
 class SdrfDataFrame(pd.DataFrame):
 
     @property
