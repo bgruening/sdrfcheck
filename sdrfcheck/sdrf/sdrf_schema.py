@@ -32,28 +32,45 @@ class SDRFSchema(Schema):
 
     def validate(self, panda_sdrf: sdrf = None) -> typing.List[LogicError]:
         errors = []
+
+        # Check minimum number of columns
         if check_minimum_columns(panda_sdrf, self._min_columns):
-            error_message = 'The number of columns in the SDRF {} is smaller than the number of minimum, columns {}'.format(len(panda_sdrf.get_sdrf_columns()), self._min_columns)
+            error_message = 'The number of columns in the SDRF ({}) is smaller than the number of mandatory fields ({})'.format(len(panda_sdrf.get_sdrf_columns()), self._min_columns)
             errors.append(LogicError(error_message, error_type=logging.WARN))
+
+        # Check the mandatory fields
+        error_mandatory = self.validate_mandatory_columns(panda_sdrf)
+        if error_mandatory is not None:
+            errors.append(error_mandatory)
         return errors
+
+    def validate_mandatory_columns(self, panda_sdrf):
+        error_mandatory = []
+        for column in self.columns:
+            if(column._optional == False and column.name not in panda_sdrf.get_sdrf_columns()):
+                error_mandatory.append(column.name)
+        if len(error_mandatory):
+            error_message = 'The following columns are mandatory and not present in the SDRF: {}'.format(",".join(error_mandatory))
+            return LogicError(error_message, error_type=logging.ERROR)
+        return None
 
 
 minimum_schema = SDRFSchema([
-    SDRFColumn('Source Name', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()], allow_empty=True,
+    SDRFColumn('source name', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()], allow_empty=True,
                optional_type=False),
-    SDRFColumn('Characteristics[organism part]', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
+    SDRFColumn('characteristics[organism part]', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
                allow_empty=True, optional_type=False),
-    SDRFColumn('Characteristics[disease]', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
+    SDRFColumn('characteristics[disease]', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
                allow_empty=True, optional_type=False),
-    SDRFColumn('Characteristics[organism]', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
+    SDRFColumn('characteristics[organism]', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
                allow_empty=True, optional_type=False),
-    SDRFColumn('Characteristics[cell type]', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
+    SDRFColumn('characteristics[cell type]', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
                allow_empty=True, optional_type=False),
-    SDRFColumn('Comment [data file]', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()], allow_empty=True,
+    SDRFColumn('comment[data file]', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()], allow_empty=True,
                optional_type=False),
-    SDRFColumn('Comment [fraction identifier]', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
+    SDRFColumn('comment[fraction identifier]', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
                allow_empty=True, optional_type=False)],
-    min_columns=59)
+    min_columns=7)
 
 human_schema = SDRFSchema([
     Column('Source Name', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()]),
