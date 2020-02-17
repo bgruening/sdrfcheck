@@ -41,6 +41,6 @@ class SdrfDataFrame(pd.DataFrame):
         Validate a corresponding SDRF
         :return:
         """
-        errors = minimum_schema.validateSDRF(self)
+        errors = minimum_schema.validate(self)
         for error in errors:
             print(error)

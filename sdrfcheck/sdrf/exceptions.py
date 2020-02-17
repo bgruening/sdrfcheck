@@ -1,5 +1,6 @@
 import logging
-from enum import IntEnum
+
+from pandas_schema import ValidationWarning
 
 
 class AppException(Exception):
@@ -13,41 +14,18 @@ class AppException(Exception):
 __all__ = ['LogicError']
 
 
-class LogicError(IntEnum):
-    """
-    This class process all the errors presented in the SDRF
-    """
+class LogicError(ValidationWarning):
 
-    def __new__(cls, code, phrase, description='', type=logging.WARN):
-        obj = int.__new__(cls, code)
-        obj._value_ = code
-        obj._phrase_ = phrase
-        obj._description_ = description
-        obj._type_ = type
-        return obj
-
-    def get_code(self):
-        return self._value_
-
-    def get_phrase(self) -> str:
-        return self._phrase_
-
-    @staticmethod
-    def get_type(error_type: int) -> logging:
-        return logging.getLevelName(error_type)
-
-    NUMBER_COLUMNS = 100, 'Number of columns', 'The number of columns', logging.WARN
-
-    @staticmethod
-    def process_errors(errors):
-        error_list = []
-        for error in errors:
-            if "Invalid number of columns" in error.message:
-                error_list.append(LogicError.NUMBER_COLUMNS)
-        return error_list
+    def __init__(self, message: str, value: str = None, row: int = -1, column: str = None, error_type: logging = None):
+        super().__init__(message, value, row, column)
+        self._error_type = error_type
 
     def __str__(self) -> str:
-        return "{ " + self._phrase_ + " }" + " -- " + "{ " + self.get_type(self._type_) + " }"
+
+        if self.row is not None and self.column is not None and self.value is not None:
+            return '{{row: {}, column: "{}"}}: "{}" {} -- {}'.format(self.row, self.column, self.value, self.message, logging.getLevelName(self._error_type))
+        else:
+            return '{} -- {}'.format(self.message, logging.getLevelName(self._error_type))
 
 
 class AppConfigException(AppException):
