@@ -10,4 +10,4 @@ install:
 script:
   - python setup.py install
   - cd sdrfcheck
-  - python sdrfchecker.py -h 
+  - python sdrfchecker.py -h
