@@ -7,3 +7,7 @@ _idea
 .idea-files
 github-gxa
 .DS_Store
+*.pyc
+
+dist/
+build/
