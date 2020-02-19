@@ -9,7 +9,8 @@ def validate_srdf():
     """
     runner = CliRunner()
     result = runner.invoke(cli,
-                           ['validate-sdrf', '--sdrf_file', 'testdata/sdrf.t    xt'])
+                           ['validate-sdrf', '--sdrf_file', 'testdata/sdrf.txt'])
+    print(result.exception)
     assert result.exit_code == 0
 
 
