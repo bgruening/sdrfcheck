@@ -12,6 +12,14 @@ from sdrfcheck.sdrf.exceptions import LogicError
 
 client = OlsClient()
 
+HUMAN_TEMPLATE = 'human'
+DEFAULT_TEMPLATE = 'default'
+VERTEBRATES_TEMPLATE = 'vertebrates'
+NON_VERTEBRATES_TEMPLATE = 'nonvertebrates'
+PLANTS_TEMPLATE = 'plants'
+CELL_LINES_TEMPLATE = 'cell_lines'
+ALL_TEMPLATES = [DEFAULT_TEMPLATE, HUMAN_TEMPLATE, VERTEBRATES_TEMPLATE, NON_VERTEBRATES_TEMPLATE, PLANTS_TEMPLATE, CELL_LINES_TEMPLATE]
+
 
 def check_minimum_columns(panda_sdrf=None, minimun_columns: int = 0):
     return len(panda_sdrf.get_sdrf_columns()) < minimun_columns
@@ -101,14 +109,18 @@ class SDRFSchema(Schema):
         errors = []
 
         for column in columns_to_pair:
-            column_pairs.append((panda_sdrf[column.name], column))
+            if column.name not in panda_sdrf:
+                message = 'The column {} is not present in the SDRF'.format(column.name)
+                errors.append(LogicError(message, error_type=logging.ERROR))
+            else:
+               column_pairs.append((panda_sdrf[column.name], column))
 
         for series, column in column_pairs:
             errors += column.validate(series)
         return sorted(errors, key=lambda e: e.row)
 
 
-minimum_schema = SDRFSchema([
+default_schema = SDRFSchema([
     SDRFColumn('source name', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
                allow_empty=True,
                optional_type=False),
@@ -125,9 +137,9 @@ minimum_schema = SDRFSchema([
     # SDRFColumn('characteristics[cell type]', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
     #            allow_empty=True,
     #            optional_type=False),
-    # SDRFColumn('comment[fraction identifier]', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
-    #            allow_empty=True,
-    #            optional_type=False),
+    SDRFColumn('comment[fraction identifier]', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
+                allow_empty=True,
+                optional_type=False),
     SDRFColumn('comment[data file]', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
                allow_empty=True,
                optional_type=False)
@@ -136,7 +148,141 @@ minimum_schema = SDRFSchema([
     min_columns=7)
 
 human_schema = SDRFSchema([
-    Column('source name', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()]),
-    Column('characteristics[organism part]', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()]),
-    Column('characteristics[disease]', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()])
-])
+    SDRFColumn('source name', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
+               allow_empty=True,
+               optional_type=False),
+    SDRFColumn('characteristics[organism part]', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
+               allow_empty=True,
+               optional_type=False),
+    SDRFColumn('characteristics[disease]', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
+               allow_empty=True,
+               optional_type=False),
+    SDRFColumn('characteristics[organism]',
+               [LeadingWhitespaceValidation(), TrailingWhitespaceValidation(), OntologyTerm("ncbitaxon")],
+               allow_empty=True,
+               optional_type=False),
+    # SDRFColumn('characteristics[cell type]', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
+    #            allow_empty=True,
+    #            optional_type=False),
+    SDRFColumn('comment[fraction identifier]', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
+                allow_empty=True,
+                optional_type=False),
+    SDRFColumn('comment[data file]', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
+               allow_empty=True,
+               optional_type=False)
+
+],
+    min_columns=7)
+
+
+vertebrates_chema = SDRFSchema([
+    SDRFColumn('source name', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
+               allow_empty=True,
+               optional_type=False),
+    SDRFColumn('characteristics[organism part]', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
+               allow_empty=True,
+               optional_type=False),
+    SDRFColumn('characteristics[disease]', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
+               allow_empty=True,
+               optional_type=False),
+    SDRFColumn('characteristics[organism]',
+               [LeadingWhitespaceValidation(), TrailingWhitespaceValidation(), OntologyTerm("ncbitaxon")],
+               allow_empty=True,
+               optional_type=False),
+    # SDRFColumn('characteristics[cell type]', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
+    #            allow_empty=True,
+    #            optional_type=False),
+    SDRFColumn('comment[fraction identifier]', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
+                allow_empty=True,
+                optional_type=False),
+    SDRFColumn('comment[data file]', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
+               allow_empty=True,
+               optional_type=False)
+
+],
+    min_columns=7)
+
+
+nonvertebrates_chema = SDRFSchema([
+    SDRFColumn('source name', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
+               allow_empty=True,
+               optional_type=False),
+    SDRFColumn('characteristics[organism part]', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
+               allow_empty=True,
+               optional_type=False),
+    SDRFColumn('characteristics[disease]', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
+               allow_empty=True,
+               optional_type=False),
+    SDRFColumn('characteristics[organism]',
+               [LeadingWhitespaceValidation(), TrailingWhitespaceValidation(), OntologyTerm("ncbitaxon")],
+               allow_empty=True,
+               optional_type=False),
+    # SDRFColumn('characteristics[cell type]', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
+    #            allow_empty=True,
+    #            optional_type=False),
+    SDRFColumn('comment[fraction identifier]', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
+                allow_empty=True,
+                optional_type=False),
+    SDRFColumn('comment[data file]', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
+               allow_empty=True,
+               optional_type=False)
+
+],
+    min_columns=7)
+
+
+plants_chema = SDRFSchema([
+    SDRFColumn('source name', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
+               allow_empty=True,
+               optional_type=False),
+    SDRFColumn('characteristics[organism part]', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
+               allow_empty=True,
+               optional_type=False),
+    SDRFColumn('characteristics[disease]', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
+               allow_empty=True,
+               optional_type=False),
+    SDRFColumn('characteristics[organism]',
+               [LeadingWhitespaceValidation(), TrailingWhitespaceValidation(), OntologyTerm("ncbitaxon")],
+               allow_empty=True,
+               optional_type=False),
+    # SDRFColumn('characteristics[cell type]', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
+    #            allow_empty=True,
+    #            optional_type=False),
+    SDRFColumn('comment[fraction identifier]', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
+                allow_empty=True,
+                optional_type=False),
+    SDRFColumn('comment[data file]', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
+               allow_empty=True,
+               optional_type=False)
+
+],
+    min_columns=7)
+
+
+cell_lines_chema = SDRFSchema([
+    SDRFColumn('source name', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
+               allow_empty=True,
+               optional_type=False),
+    SDRFColumn('characteristics[organism part]', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
+               allow_empty=True,
+               optional_type=False),
+    SDRFColumn('characteristics[disease]', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
+               allow_empty=True,
+               optional_type=False),
+    SDRFColumn('characteristics[organism]',
+               [LeadingWhitespaceValidation(), TrailingWhitespaceValidation(), OntologyTerm("ncbitaxon")],
+               allow_empty=True,
+               optional_type=False),
+    # SDRFColumn('characteristics[cell type]', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
+    #            allow_empty=True,
+    #            optional_type=False),
+    SDRFColumn('comment[fraction identifier]', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
+                allow_empty=True,
+                optional_type=False),
+    SDRFColumn('comment[data file]', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
+               allow_empty=True,
+               optional_type=False)
+
+],
+    min_columns=7)
+
