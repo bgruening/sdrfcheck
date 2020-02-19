@@ -11,3 +11,4 @@ github-gxa
 
 dist/
 build/
+*.egg-info
