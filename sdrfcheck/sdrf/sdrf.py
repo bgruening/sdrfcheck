@@ -1,11 +1,8 @@
 import pandas as pd
-from pygments.lexer import default
 
-from sdrfcheck.sdrf.exceptions import LogicError
 from sdrfcheck.sdrf.sdrf_schema import human_schema, HUMAN_TEMPLATE, VERTEBRATES_TEMPLATE, \
-    vertebrates_chema, DEFAULT_TEMPLATE, NON_VERTEBRATES_TEMPLATE, nonvertebrates_chema, PLANTS_TEMPLATE, plants_chema, \
+    vertebrates_chema, NON_VERTEBRATES_TEMPLATE, nonvertebrates_chema, PLANTS_TEMPLATE, plants_chema, \
     CELL_LINES_TEMPLATE, cell_lines_chema, default_schema
-from ebi.ols.api.client import OlsClient
 
 
 class SdrfDataFrame(pd.DataFrame):

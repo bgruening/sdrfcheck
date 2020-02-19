@@ -18,7 +18,8 @@ VERTEBRATES_TEMPLATE = 'vertebrates'
 NON_VERTEBRATES_TEMPLATE = 'nonvertebrates'
 PLANTS_TEMPLATE = 'plants'
 CELL_LINES_TEMPLATE = 'cell_lines'
-ALL_TEMPLATES = [DEFAULT_TEMPLATE, HUMAN_TEMPLATE, VERTEBRATES_TEMPLATE, NON_VERTEBRATES_TEMPLATE, PLANTS_TEMPLATE, CELL_LINES_TEMPLATE]
+ALL_TEMPLATES = [DEFAULT_TEMPLATE, HUMAN_TEMPLATE, VERTEBRATES_TEMPLATE, NON_VERTEBRATES_TEMPLATE, PLANTS_TEMPLATE,
+                 CELL_LINES_TEMPLATE]
 
 
 def check_minimum_columns(panda_sdrf=None, minimun_columns: int = 0):
@@ -113,7 +114,7 @@ class SDRFSchema(Schema):
                 message = 'The column {} is not present in the SDRF'.format(column.name)
                 errors.append(LogicError(message, error_type=logging.ERROR))
             else:
-               column_pairs.append((panda_sdrf[column.name], column))
+                column_pairs.append((panda_sdrf[column.name], column))
 
         for series, column in column_pairs:
             errors += column.validate(series)
@@ -138,8 +139,8 @@ default_schema = SDRFSchema([
     #            allow_empty=True,
     #            optional_type=False),
     SDRFColumn('comment[fraction identifier]', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
-                allow_empty=True,
-                optional_type=False),
+               allow_empty=True,
+               optional_type=False),
     SDRFColumn('comment[data file]', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
                allow_empty=True,
                optional_type=False)
@@ -165,15 +166,14 @@ human_schema = SDRFSchema([
     #            allow_empty=True,
     #            optional_type=False),
     SDRFColumn('comment[fraction identifier]', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
-                allow_empty=True,
-                optional_type=False),
+               allow_empty=True,
+               optional_type=False),
     SDRFColumn('comment[data file]', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
                allow_empty=True,
                optional_type=False)
 
 ],
     min_columns=7)
-
 
 vertebrates_chema = SDRFSchema([
     SDRFColumn('source name', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
@@ -193,15 +193,14 @@ vertebrates_chema = SDRFSchema([
     #            allow_empty=True,
     #            optional_type=False),
     SDRFColumn('comment[fraction identifier]', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
-                allow_empty=True,
-                optional_type=False),
+               allow_empty=True,
+               optional_type=False),
     SDRFColumn('comment[data file]', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
                allow_empty=True,
                optional_type=False)
 
 ],
     min_columns=7)
-
 
 nonvertebrates_chema = SDRFSchema([
     SDRFColumn('source name', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
@@ -221,15 +220,14 @@ nonvertebrates_chema = SDRFSchema([
     #            allow_empty=True,
     #            optional_type=False),
     SDRFColumn('comment[fraction identifier]', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
-                allow_empty=True,
-                optional_type=False),
+               allow_empty=True,
+               optional_type=False),
     SDRFColumn('comment[data file]', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
                allow_empty=True,
                optional_type=False)
 
 ],
     min_columns=7)
-
 
 plants_chema = SDRFSchema([
     SDRFColumn('source name', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
@@ -249,15 +247,14 @@ plants_chema = SDRFSchema([
     #            allow_empty=True,
     #            optional_type=False),
     SDRFColumn('comment[fraction identifier]', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
-                allow_empty=True,
-                optional_type=False),
+               allow_empty=True,
+               optional_type=False),
     SDRFColumn('comment[data file]', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
                allow_empty=True,
                optional_type=False)
 
 ],
     min_columns=7)
-
 
 cell_lines_chema = SDRFSchema([
     SDRFColumn('source name', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
@@ -277,12 +274,11 @@ cell_lines_chema = SDRFSchema([
     #            allow_empty=True,
     #            optional_type=False),
     SDRFColumn('comment[fraction identifier]', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
-                allow_empty=True,
-                optional_type=False),
+               allow_empty=True,
+               optional_type=False),
     SDRFColumn('comment[data file]', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
                allow_empty=True,
                optional_type=False)
 
 ],
     min_columns=7)
-
