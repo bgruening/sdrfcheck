@@ -15,7 +15,6 @@ def validate_srdf():
     print(result.exception)
     assert result.exit_code == 0
 
-
 def test_bioontologies():
     keyword = 'human'
     client = Zooma()
@@ -34,9 +33,6 @@ def test_bioontologies():
     results = client.recommender(keyword)
     ols_terms = client.process_zumma_results(results)
     print(ols_terms)
-
-
-
 
 if __name__ == '__main__':
     test_bioontologies()
