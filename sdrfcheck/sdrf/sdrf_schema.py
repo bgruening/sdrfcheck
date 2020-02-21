@@ -28,7 +28,6 @@ TERM_NAME = 'NM'
 def check_minimum_columns(panda_sdrf=None, minimun_columns: int = 0):
     return len(panda_sdrf.get_sdrf_columns()) < minimun_columns
 
-
 def ontology_term_parser(cell_value: str = None):
     """
     Parse a line string and convert it into a dictionary {key -> value}
@@ -60,7 +59,6 @@ class OntologyTerm(_SeriesValidation):
     """
     Checks that there is no leading whitespace in this column
     """
-
     def __init__(self, ontology_name: str = None, **kwargs):
         super().__init__(**kwargs)
         self._ontology_name = ontology_name
@@ -94,7 +92,7 @@ class OntologyTerm(_SeriesValidation):
         :param series: return the series that do not match the criteria
         :return:
         """
-        terms = [ ontology_term_parser(x) for x in series.unique()]
+        terms = [ontology_term_parser(x) for x in series.unique()]
         labels = []
         for term in terms:
             ontology_terms = client.search(ontology=self._ontology_name, query=term[TERM_NAME], exact="true")
@@ -256,7 +254,7 @@ mass_spectrometry_schema = SDRFSchema([
     SDRFColumn('comment[modification parameters]', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
                allow_empty=True,
                optional_type=False),
-    SDRFColumn('comment[cleavage agent details]', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
+    SDRFColumn('comment[cleavage agent details]', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation(), OntologyTerm("ms")],
                allow_empty=True,
                optional_type=False),
     SDRFColumn('comment[fragment mass tolerance]', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
