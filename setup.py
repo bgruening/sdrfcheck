@@ -19,4 +19,5 @@ setup(name='sdrfcheck',
       install_requires=['requests', 'pandas_schema', 'pandas', 'ebi-ols-client', 'click'],
       scripts=['sdrfcheck/sdrfchecker.py'],
       packages=find_packages(),
+      python_requires='>=3.4',
       zip_safe=False)
