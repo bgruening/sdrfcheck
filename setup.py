@@ -7,7 +7,7 @@ def readme():
 
 
 setup(name='sdrfcheck',
-      version='0.0.3',
+      version='0.0.4',
       description='Python tools for SDRF proteomics validation',
       url='http://github.com/bigbio/sdrfcheck',
       long_description=readme(),
