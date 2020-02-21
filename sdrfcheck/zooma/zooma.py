@@ -2,9 +2,10 @@ import requests
 from ebi.ols.api.client import OlsClient
 from requests import HTTPError
 
+
 class OlsTerm(object):
 
-    def __init__(self, iri: str =None, term: str = None, ontology: str = None) -> None:
+    def __init__(self, iri: str = None, term: str = None, ontology: str = None) -> None:
         self._iri = iri
         self._term = term
         self._ontology = ontology
@@ -39,20 +40,21 @@ class SlimOlsClient(object):
 
 
 class Zooma(object):
-    '''
+    """
     A Python binding of the Zooma REST API
     (http://data.bioontology.org/documentation)
-    '''
+    """
 
     BASE_URL = 'https://www.ebi.ac.uk/spot/zooma/v2/api/services'
 
-    def process_zumma_results(self, results):
-        '''
+    @staticmethod
+    def process_zumma_results(results):
+        """
         Get a list of results from a query to Zooma and return a list
         of dictionaries containing the queryValue, confidence and ols_url
         :param results: List of query terms
         :return:
-        '''
+        """
 
         ontology_terms = []
         for result in results:
@@ -78,6 +80,7 @@ class Zooma(object):
 
     def _zooma_api_request(self, url, method, payload={}):
 
+        global r, error_message
         processed_payload = self._process_payload(payload)
         if method == 'get':
             r = requests.get(url, params=processed_payload)
@@ -110,10 +113,10 @@ class Zooma(object):
         return value
 
     def _process_payload(self, payload):
-        '''
+        """
         Turn boolean True to str 'true' and False to str 'false'. Otherwise,
         server will ignore argument with boolean value.
         :param payload:
         :return:
-        '''
+        """
         return {key: self.process_value(value) for key, value in payload.items()}

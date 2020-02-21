@@ -1,10 +1,10 @@
 import logging
-import pandas as pd
 import typing
 from typing import Any
 
+import pandas as pd
 from ebi.ols.api.client import OlsClient
-from pandas_schema import Column, Schema, ValidationWarning
+from pandas_schema import Column, Schema
 from pandas_schema.validation import LeadingWhitespaceValidation, TrailingWhitespaceValidation, _SeriesValidation
 
 from sdrfcheck.sdrf import sdrf
@@ -18,12 +18,34 @@ VERTEBRATES_TEMPLATE = 'vertebrates'
 NON_VERTEBRATES_TEMPLATE = 'nonvertebrates'
 PLANTS_TEMPLATE = 'plants'
 CELL_LINES_TEMPLATE = 'cell_lines'
+MASS_SPECTROMETRY = 'mass_spectrometry'
 ALL_TEMPLATES = [DEFAULT_TEMPLATE, HUMAN_TEMPLATE, VERTEBRATES_TEMPLATE, NON_VERTEBRATES_TEMPLATE, PLANTS_TEMPLATE,
                  CELL_LINES_TEMPLATE]
+
+TERM_NAME = 'NM'
 
 
 def check_minimum_columns(panda_sdrf=None, minimun_columns: int = 0):
     return len(panda_sdrf.get_sdrf_columns()) < minimun_columns
+
+
+def ontology_term_parser(cell_value: str = None):
+    """
+    Parse a line string and convert it into a dictionary {key -> value}
+    :param cell_value: String line
+    :return:
+    """
+    term = {}
+    values = cell_value.split(";")
+    if len(values) == 1:
+        name = values[0].lower()
+        if "=" not in name:
+            term[TERM_NAME] = name
+    else:
+        for name in values:
+            value_terms = name.split("=")
+            term[value_terms[0].upper()] = value_terms[1].lower()
+    return term
 
 
 class SDRFColumn(Column):
@@ -45,18 +67,43 @@ class OntologyTerm(_SeriesValidation):
 
     @property
     def default_message(self):
+        """
+        Return a message for the validation of the Ontology Term
+        :return:
+        """
         return "the term name or title can't be found in the ontology -- {}".format(self._ontology_name)
 
+    @staticmethod
+    def validate_ontology_terms(cell_value, labels):
+        """
+        Check if a cell value is in a list of labels or list of strings
+        :param cell_value: string line in cell
+        :param labels: list of labels
+        :return:
+        """
+        cell_value = cell_value.lower()
+        term = ontology_term_parser(cell_value)
+        if term[TERM_NAME] in labels:
+            return True
+        return False
+
     def validate(self, series: pd.Series) -> pd.Series:
-        terms = series.unique()
+        """
+        Validate if the term is present in the provided ontology. This method looks in the provided
+        ontology _ontology_name
+        :param series: return the series that do not match the criteria
+        :return:
+        """
+        terms = [ ontology_term_parser(x) for x in series.unique()]
         labels = []
         for term in terms:
-            ontology_terms = client.search(ontology=self._ontology_name, query=term, exact="true")
+            ontology_terms = client.search(ontology=self._ontology_name, query=term[TERM_NAME], exact="true")
             if ontology_terms is not None:
                 query_labels = [o._data['label'].lower() for o in ontology_terms.data._data]
                 for label in query_labels:
                     labels.append(label)
-        return series.isin(labels)
+
+        return series.apply(lambda cell_value: self.validate_ontology_terms(cell_value, labels))
 
 
 class SDRFSchema(Schema):
@@ -150,8 +197,8 @@ default_schema = SDRFSchema([
 
 human_schema = SDRFSchema([
     SDRFColumn('characteristics[cell type]', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
-                allow_empty=True,
-                optional_type=False),
+               allow_empty=True,
+               optional_type=False),
     SDRFColumn('characteristics[ethnicity]', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
                allow_empty=True,
                optional_type=False),
@@ -185,17 +232,37 @@ nonvertebrates_chema = SDRFSchema([
                optional_type=True)],
     min_columns=7)
 
-plants_chema = SDRFSchema([SDRFColumn('characteristics[developmental stage]', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
-               allow_empty=True,
-               optional_type=True),
-    SDRFColumn('characteristics[strain/breed]', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
-               allow_empty=True,
-               optional_type=True)
-],
+plants_chema = SDRFSchema(
+    [SDRFColumn('characteristics[developmental stage]', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
+                allow_empty=True,
+                optional_type=True),
+     SDRFColumn('characteristics[strain/breed]', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
+                allow_empty=True,
+                optional_type=True)
+     ],
     min_columns=7)
 
 cell_lines_schema = SDRFSchema([
     SDRFColumn('characteristics[cell line code]', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
+               allow_empty=True,
+               optional_type=False)
+], min_columns=7)
+
+mass_spectrometry_schema = SDRFSchema([
+    SDRFColumn('comment[instrument]',
+               [LeadingWhitespaceValidation(), TrailingWhitespaceValidation(), OntologyTerm("ms")],
+               allow_empty=True,
+               optional_type=False),
+    SDRFColumn('comment[modification parameters]', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
+               allow_empty=True,
+               optional_type=False),
+    SDRFColumn('comment[cleavage agent details]', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
+               allow_empty=True,
+               optional_type=False),
+    SDRFColumn('comment[fragment mass tolerance]', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
+               allow_empty=True,
+               optional_type=False),
+    SDRFColumn('comment[precursor mass tolerance]', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
                allow_empty=True,
                optional_type=False)
 ], min_columns=7)

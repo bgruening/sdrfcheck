@@ -15,6 +15,7 @@ def validate_srdf():
     print(result.exception)
     assert result.exit_code == 0
 
+
 def test_bioontologies():
     keyword = 'human'
     client = Zooma()
@@ -27,12 +28,12 @@ def test_bioontologies():
         terms = ols_client.get_term_from_url(a['ols_url'], ontology="ncbitaxon")
         [print(x) for x in terms]
 
-
     keyword = 'Lung adenocarcinoma'
     client = Zooma()
     results = client.recommender(keyword)
     ols_terms = client.process_zumma_results(results)
     print(ols_terms)
+
 
 if __name__ == '__main__':
     test_bioontologies()

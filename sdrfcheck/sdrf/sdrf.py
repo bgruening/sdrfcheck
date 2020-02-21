@@ -2,7 +2,7 @@ import pandas as pd
 
 from sdrfcheck.sdrf.sdrf_schema import human_schema, HUMAN_TEMPLATE, VERTEBRATES_TEMPLATE, \
     vertebrates_chema, NON_VERTEBRATES_TEMPLATE, nonvertebrates_chema, PLANTS_TEMPLATE, plants_chema, \
-    CELL_LINES_TEMPLATE, cell_lines_schema, default_schema
+    CELL_LINES_TEMPLATE, cell_lines_schema, default_schema, MASS_SPECTROMETRY, mass_spectrometry_schema
 
 
 class SdrfDataFrame(pd.DataFrame):
@@ -42,7 +42,10 @@ class SdrfDataFrame(pd.DataFrame):
         Validate a corresponding SDRF
         :return:
         """
-        errors = default_schema.validate(self)
+        errors = []
+        if template != MASS_SPECTROMETRY:
+            errors = default_schema.validate(self)
+
         if template == HUMAN_TEMPLATE:
             errors = errors + human_schema.validate(self)
         elif template == VERTEBRATES_TEMPLATE:
@@ -53,6 +56,8 @@ class SdrfDataFrame(pd.DataFrame):
             errors = errors + plants_chema.validate(self)
         elif template == CELL_LINES_TEMPLATE:
             errors = errors + cell_lines_schema.validate(self)
+        elif template == MASS_SPECTROMETRY:
+            errors = mass_spectrometry_schema.validate(self)
 
         for error in errors:
             print(error)
