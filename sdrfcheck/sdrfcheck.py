@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import logging
 
 import click
@@ -32,6 +34,9 @@ def validate_sdrf(ctx, sdrf_file: str, template: str, check_ms):
 
     if check_ms:
         df.validate(MASS_SPECTROMETRY)
+
+    # provide some info to the user, as no info is confusing
+    print('Everything seems to fine. Well done.')
 
 
 cli.add_command(validate_sdrf)
