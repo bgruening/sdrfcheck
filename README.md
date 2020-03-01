@@ -15,6 +15,6 @@ pip install sdrfcheck
 Then, you can use the tool by executing the following command:
 
 ```bash
-sdrfchecker.py validate-sdrf --sdrf_file {here_the_path_to_sdrf_file}
+sdrfcheck validate-sdrf --sdrf_file {here_the_path_to_sdrf_file}
 ```
 
