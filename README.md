@@ -9,12 +9,12 @@ Library and tool to validate an sdrf (Sample and Data Relationship Format) for p
 First you need to install the tool:
 
 ```bash
-pip install sdrfchecker
+pip install sdrfcheck
 ```
 
 Then, you can use the tool by executing the following command:
 
 ```bash
-python sdrfchecker.py validate-sdrf --sdrf_file {here_the_path_to_sdrf_file}
+sdrfchecker.py validate-sdrf --sdrf_file {here_the_path_to_sdrf_file}
 ```
 
