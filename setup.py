@@ -22,7 +22,7 @@ setup(name='sdrfcheck',
       license='LICENSE',
       include_package_data=True,
       install_requires=['requests', 'pandas_schema', 'pandas', 'ebi-ols-client', 'click'],
-      scripts=['sdrfcheck/sdrfchecker.py'],
+      scripts=['sdrfcheck/sdrfcheck.py'],
       packages=find_packages(),
       python_requires='>=3.4',
       zip_safe=False)
