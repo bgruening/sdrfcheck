@@ -39,6 +39,9 @@ def validate_sdrf(ctx, sdrf_file: str, template: str, check_ms):
       print(error)
 
 
+    # provide some info to the user, as no info is confusing
+    print('Everything seems to fine. Well done.')
+
 
 cli.add_command(validate_sdrf)
 

@@ -1,7 +1,7 @@
 from click.testing import CliRunner
 from sdrfcheck.zooma.zooma import Zooma, SlimOlsClient
 
-from sdrfcheck.sdrfchecker import cli
+from sdrfcheck.sdrfcheck import cli
 
 
 def validate_srdf():
