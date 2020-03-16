@@ -6,16 +6,15 @@ from sdrfcheck.sdrfchecker import cli
 
 def validate_srdf():
   """
-    Test the default behaviour of the vcf-to-proteindb tool
-    :return:
-    """
+  Test the default behaviour of the vcf-to-proteindb tool
+  :return:
+  """
   runner = CliRunner()
   result = runner.invoke(cli,
-                         ['validate-sdrf', '--sdrf_file', 'testdata/sdrf.txt' , '--check_ms'])
+                         ['validate-sdrf', '--sdrf_file', 'testdata/sdrf.txt', '--check_ms'])
 
   print(result.output)
   assert 'ERROR' not in result.output
-
 
 
 def test_bioontologies():
