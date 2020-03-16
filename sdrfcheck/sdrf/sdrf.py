@@ -59,5 +59,4 @@ class SdrfDataFrame(pd.DataFrame):
         elif template == MASS_SPECTROMETRY:
             errors = mass_spectrometry_schema.validate(self)
 
-        for error in errors:
-            print(error)
+        return errors

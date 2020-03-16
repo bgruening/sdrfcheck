@@ -180,9 +180,10 @@ default_schema = SDRFSchema([
                [LeadingWhitespaceValidation(), TrailingWhitespaceValidation(), OntologyTerm("ncbitaxon")],
                allow_empty=False,
                optional_type=False),
-    # SDRFColumn('characteristics[cell type]', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
-    #            allow_empty=True,
-    #            optional_type=False),
+    SDRFColumn('assay name',
+               [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
+               allow_empty=False,
+               optional_type=False),
     SDRFColumn('comment[fraction identifier]', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],
                allow_empty=True,
                optional_type=False),
@@ -190,8 +191,7 @@ default_schema = SDRFSchema([
                allow_empty=True,
                optional_type=False)
 
-],
-    min_columns=7)
+], min_columns=7)
 
 human_schema = SDRFSchema([
     SDRFColumn('characteristics[cell type]', [LeadingWhitespaceValidation(), TrailingWhitespaceValidation()],

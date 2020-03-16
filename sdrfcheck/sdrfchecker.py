@@ -30,10 +30,14 @@ def validate_sdrf(ctx, sdrf_file: str, template: str, check_ms):
         template = DEFAULT_TEMPLATE
 
     df = SdrfDataFrame.parse(sdrf_file)
-    df.validate(template)
+    errors = df.validate(template)
 
     if check_ms:
-        df.validate(MASS_SPECTROMETRY)
+        errors = errors + df.validate(MASS_SPECTROMETRY)
+
+    for error in errors:
+      print(error)
+
 
 
 cli.add_command(validate_sdrf)
